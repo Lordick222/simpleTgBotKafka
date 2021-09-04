@@ -1,6 +1,6 @@
 package com.example.demo
 
-import com.example.demo.service.MyAmazingBot
+import com.example.demo.service.Methods
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 import org.telegram.telegrambots.meta.TelegramBotsApi
@@ -15,7 +15,7 @@ fun main(args: Array<String>) {
 	runApplication<SimpleTgBotApplication>(*args)
 	val telegramBotsApi = TelegramBotsApi(DefaultBotSession::class.java)
 	try {
-		telegramBotsApi.registerBot(MyAmazingBot())
+		telegramBotsApi.registerBot(Methods())
 	} catch (e: TelegramApiException) {
 		e.printStackTrace()
 	}

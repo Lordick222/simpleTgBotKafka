@@ -8,7 +8,7 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException
 
 
 @Service
-class MyAmazingBot : TelegramLongPollingBot() {
+class Methods : TelegramLongPollingBot() {
     override fun getBotToken(): String {
         return "1969725133:AAGCOLwk-TCPhHYjC7-QH4l4wQC4Sp-Fozs"
     }
@@ -19,7 +19,7 @@ class MyAmazingBot : TelegramLongPollingBot() {
 
     override fun onUpdateReceived(update: Update?) {
         if (update == null) return;
-        if (update.hasMessage() && update.getMessage().hasText()) {
+        if (update.hasMessage() && update.message.hasText()) {
             val messageText = update.message.text
             val chatId = update.message.chatId
             val message = SendMessage.builder().chatId(chatId.toString()).text(messageText).build()
@@ -29,6 +29,9 @@ class MyAmazingBot : TelegramLongPollingBot() {
                 e.stackTrace
                 throw e
             }
+        }
+        if (update.hasMessage() && update.message.hasPhoto()){
+
         }
     }
 }
