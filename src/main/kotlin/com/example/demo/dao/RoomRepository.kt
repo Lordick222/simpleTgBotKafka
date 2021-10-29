@@ -22,10 +22,16 @@ class RoomRepository(
             builder.append("------------------------")
             builder.append(System.getProperty("line.separator"))
             builder.append(it)
-            builder.append("------------------------")
             builder.append(System.getProperty("line.separator"))
+            builder.append("------------------------")
         }
         return builder.toString()
+    }
+
+    fun createUser(roomName: String, key: Long): String {
+        val room = Room(null, LocalDateTime.now(), name, key)
+        rooms.add(room)
+        return room.toString()
     }
 
 }

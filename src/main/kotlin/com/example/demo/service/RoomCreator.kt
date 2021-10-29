@@ -10,11 +10,16 @@ class RoomCreator(private val roomRepository: RoomRepository) {
 
     fun createNewRoom(name: String, key: Long): String {
         val roomName = name.removePrefix("/new_poker_room ")
-        roomRepository.createNewRoom(name, key)
-        return roomName
+        val result = roomRepository.createNewRoom(roomName, key)
+        return result
     }
 
     fun getRooms(): String {
+        return roomRepository.getAllRooms()
+    }
+
+    fun createUser(messageText: String, chatId: Long): String {
+        val UserInfo = messageText.removePrefix("/register_user ")
         return roomRepository.getAllRooms()
     }
 }
