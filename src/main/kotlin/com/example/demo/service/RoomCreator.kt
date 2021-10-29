@@ -18,7 +18,7 @@ class RoomCreator(private val roomRepository: RoomRepository) {
         return roomRepository.getAllRooms()
     }
 
-    fun createUser(messageText: String, chatId: Long): String {
+    fun registerInRoom(messageText: String, chatId: Long): String {
         val UserInfo = messageText.removePrefix("/register_user ")
         return roomRepository.getAllRooms()
     }

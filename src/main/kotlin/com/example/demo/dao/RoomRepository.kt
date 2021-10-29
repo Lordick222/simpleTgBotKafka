@@ -7,12 +7,12 @@ import java.time.LocalDateTime
 
 @Repository
 class RoomRepository(
-    var rooms: MutableList<Room> = mutableListOf()
+    var rooms: MutableMap<String, Room> = mutableMapOf()
 ) {
 
     fun createNewRoom(name: String, key: Long): String {
         val room = Room(null, LocalDateTime.now(), name, key)
-        rooms.add(room)
+        rooms.getOrPut(name, room)
         return room.toString()
     }
 
