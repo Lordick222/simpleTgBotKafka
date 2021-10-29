@@ -1,14 +1,20 @@
 package com.example.demo.service
 
+import com.example.demo.dao.RoomRepository
+import lombok.AllArgsConstructor
 import org.springframework.stereotype.Service
-import org.telegram.telegrambots.bots.TelegramLongPollingBot
-import org.telegram.telegrambots.meta.api.methods.send.SendMessage
 
 @Service
-class RoomCreator {
+@AllArgsConstructor
+class RoomCreator(private val roomRepository: RoomRepository) {
 
-    fun createNewRoom(text:String): String {
-        val roomName = text.removePrefix("/new_poker_room ")
+    fun createNewRoom(name: String, key: Long): String {
+        val roomName = name.removePrefix("/new_poker_room ")
+        roomRepository.createNewRoom(name, key)
         return roomName
+    }
+
+    fun getRooms(): String {
+        return roomRepository.getAllRooms()
     }
 }
