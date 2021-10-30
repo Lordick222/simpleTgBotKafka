@@ -23,9 +23,8 @@ class MyAmazingBot(private val roomCreator: RoomCreator) : TelegramLongPollingBo
     override fun onUpdateReceived(update: Update?) {
         if (update == null) return;
         if (update.hasMessage() && update.getMessage().hasText()) {
-            val messageText = update.message.text
             val chatId = update.message.chatId
-            val reply = getCommand(messageText, chatId)
+            val reply = getCommand(update)
             val message = SendMessage.builder().chatId(chatId.toString()).text(reply).build()
             try {
                 execute(message)
@@ -36,7 +35,9 @@ class MyAmazingBot(private val roomCreator: RoomCreator) : TelegramLongPollingBo
         }
     }
 
-    fun getCommand(messageText: String, chatId: Long): String {
+    fun getCommand(update: Update): String {
+        val messageText = update.message.text
+        val chatId = update.message.chatId
         var reply = ""
         if (messageText.contains("/new_poker_room")) {
             reply = roomCreator.createNewRoom(messageText, chatId)
@@ -44,8 +45,9 @@ class MyAmazingBot(private val roomCreator: RoomCreator) : TelegramLongPollingBo
         if (messageText.contains("/get_rooms")) {
             reply = roomCreator.getRooms()
         }
-        if (messageText.contains("/register_user")) {
-            reply = roomCreator.registerInRoom(messageText, chatId)
+        if (messageText.contains("/create_user")) {
+            reply = roomCreator.registerUser(messageText, chatId, update.message.from.userName)
+
         }
         return reply
     }

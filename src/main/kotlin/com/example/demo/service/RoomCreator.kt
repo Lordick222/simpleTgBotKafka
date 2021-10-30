@@ -18,8 +18,8 @@ class RoomCreator(private val roomRepository: RoomRepository) {
         return roomRepository.getAllRooms()
     }
 
-    fun registerInRoom(messageText: String, chatId: Long): String {
-        val UserInfo = messageText.removePrefix("/register_user ")
-        return roomRepository.getAllRooms()
+    fun registerUser(position: String, chatId: Long, name: String): String {
+        val editPosition = position.removePrefix("/create_user ")
+        return roomRepository.registerUser(editPosition, chatId, name)
     }
 }
