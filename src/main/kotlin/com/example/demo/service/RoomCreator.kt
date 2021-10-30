@@ -32,4 +32,19 @@ class RoomCreator(private val roomRepository: RoomRepository) {
         val roomName = command.removePrefix("/room_users ")
         return roomRepository.getRoomsUsers(roomName, userKey)
     }
+
+    fun setUserVote(command: String, userKey: Long): String {
+        val vote = command.removePrefix("/vote ")
+        return roomRepository.setUserVote(vote.toInt(), userKey)
+    }
+
+    fun showVoteResults(command: String, userKey: Long): String {
+        val roomName = command.removePrefix("/show_results ")
+        return roomRepository.showVoteResults(roomName, userKey)
+    }
+
+    fun dropResults(command: String, userKey: Long): String {
+        val roomName = command.removePrefix("/drop_results ")
+        return roomRepository.dropResults(roomName, userKey)
+    }
 }

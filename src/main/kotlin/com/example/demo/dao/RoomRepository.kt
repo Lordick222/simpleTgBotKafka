@@ -12,7 +12,7 @@ class RoomRepository(
 ) {
 
     fun createNewRoom(name: String, key: Long): String {
-        val room = Room(null, LocalDateTime.now(), name, key)
+        val room = Room(mutableListOf(), LocalDateTime.now(), name, key)
         rooms.getOrPut(name) { room }
         return rooms.get(name).toString()
     }
@@ -49,8 +49,63 @@ class RoomRepository(
         sb.append(room.toString()).append(System.getProperty("line.separator"))
             .append("----------users----------").append(System.getProperty("line.separator"))
         room.users?.forEach {
-            sb.append(users[it].toString()).append(System.getProperty("line.separator"))
+            sb.append("position: ${users[it]?.position} name: ${users[it]?.name}").append(
+                System.getProperty(
+                    "line" +
+                            ".separator"
+                )
+            )
         }
         return sb.toString()
+    }
+
+    fun setUserVote(vote: Int, userKey: Long): String {
+        val user = users.get(userKey) ?: return "user is not register"
+        user.vote = vote
+        return "sussesfully vote for ${user.vote}"
+    }
+
+    fun isUsersVote(roomName: String, userKey: Long): String {
+        val room = rooms.get(roomName) ?: return "room is not register now"
+        if (!room.lockKey.equals(userKey)) return "it's not your room"
+        val sb = StringBuilder()
+        sb.append(room.toString()).append(System.getProperty("line.separator"))
+            .append("----------users----------").append(System.getProperty("line.separator"))
+        room.users?.forEach {
+            val isVote = users[it]?.vote != null
+            sb.append("position: ${users[it]?.position} name: ${users[it]?.name} isVote: $isVote").append(
+                System.getProperty(
+                    "line" +
+                            ".separator"
+                )
+            )
+        }
+        return sb.toString()
+    }
+
+    fun showVoteResults(roomName: String, userKey: Long): String {
+        val room = rooms.get(roomName) ?: return "room is not register now"
+        if (!room.lockKey.equals(userKey)) return "it's not your room"
+        val sb = StringBuilder()
+        sb.append(room.toString()).append(System.getProperty("line.separator"))
+            .append("----------users----------").append(System.getProperty("line.separator"))
+        room.users?.forEach {
+            sb.append("position: ${users[it]?.position} name: ${users[it]?.name} vote: ${users[it]?.vote}").append(
+                System.getProperty(
+                    "line" +
+                            ".separator"
+                )
+            )
+        }
+        return sb.toString()
+    }
+
+    fun dropResults(roomName: String, userKey: Long): String {
+        val room = rooms.get(roomName) ?: return "room is not register now"
+        if (!room.lockKey.equals(userKey)) return "it's not your room"
+       room.users?.forEach {
+           users[it]?.vote = null
+       }
+        return "votes dropped"
     }
 }

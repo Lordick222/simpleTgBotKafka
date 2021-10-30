@@ -4,7 +4,7 @@ data class User(
     val name: String?,
     val position: String?,
     val chatId: Long,
-    val vote: Int?
+    var vote: Int?
 ) {
     override fun toString(): String = "position: $position \t name: $name \t vote: $vote "
 }
