@@ -39,32 +39,34 @@ class MyAmazingBot(private val roomCreator: RoomCreator) : TelegramLongPollingBo
         val messageText = update.message.text
         val chatId = update.message.chatId
         var reply = ""
-        if (messageText.contains("/new_poker_room")) {
-            reply = roomCreator.createNewRoom(messageText, chatId)
-        }
-        if (messageText.contains("/get_rooms")) {
-            reply = roomCreator.getRooms()
-        }
-        if (messageText.contains("/create_user")) {
-            reply = roomCreator.registerUser(messageText, chatId, update.message.from.userName)
-        }
-        if (messageText.contains("/enter_room")) {
-            reply = roomCreator.enterRoom(messageText, chatId)
-        }
-        if (messageText.contains("/room_users")) {
-            reply = roomCreator.getRoomsUsers(messageText, chatId)
-        }
-        if (messageText.contains("/vote")) {
-            reply = roomCreator.setUserVote(messageText, chatId)
-        }
-        if (messageText.contains("/show_results")) {
-            reply = roomCreator.showVoteResults(messageText, chatId)
-        }
-        if (messageText.contains("/drop_results")) {
-            reply = roomCreator.dropResults(messageText, chatId)
-        }
-        if (messageText.contains("/is_vote")) {
-            reply = roomCreator.isUsersVote(messageText, chatId)
+        when {
+            messageText.contains("/new_poker_room") -> {
+                reply = roomCreator.createNewRoom(messageText, chatId)
+            }
+            messageText.contains("/get_rooms") -> {
+                reply = roomCreator.getRooms()
+            }
+            messageText.contains("/create_user") -> {
+                reply = roomCreator.registerUser(messageText, chatId, update.message.from.userName)
+            }
+            messageText.contains("/enter_room") -> {
+                reply = roomCreator.enterRoom(messageText, chatId)
+            }
+            messageText.contains("/room_users") -> {
+                reply = roomCreator.getRoomsUsers(messageText, chatId)
+            }
+            messageText.contains("/vote") -> {
+                reply = roomCreator.setUserVote(messageText, chatId)
+            }
+            messageText.contains("/show_results") -> {
+                reply = roomCreator.showVoteResults(messageText, chatId)
+            }
+            messageText.contains("/drop_results") -> {
+                reply = roomCreator.dropResults(messageText, chatId)
+            }
+            messageText.contains("/is_vote") -> {
+                reply = roomCreator.isUsersVote(messageText, chatId)
+            }
         }
         return reply
     }
