@@ -63,6 +63,9 @@ class MyAmazingBot(private val roomCreator: RoomCreator) : TelegramLongPollingBo
         if (messageText.contains("/drop_results")) {
             reply = roomCreator.dropResults(messageText, chatId)
         }
+        if (messageText.contains("/is_vote")) {
+            reply = roomCreator.isUsersVote(messageText, chatId)
+        }
         return reply
     }
 }

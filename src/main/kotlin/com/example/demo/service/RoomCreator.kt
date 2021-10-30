@@ -38,6 +38,11 @@ class RoomCreator(private val roomRepository: RoomRepository) {
         return roomRepository.setUserVote(vote.toInt(), userKey)
     }
 
+    fun isUsersVote(command: String, userKey: Long): String {
+        val roomName = command.removePrefix("/is_vote ")
+        return roomRepository.isUsersVote(roomName, userKey)
+    }
+
     fun showVoteResults(command: String, userKey: Long): String {
         val roomName = command.removePrefix("/show_results ")
         return roomRepository.showVoteResults(roomName, userKey)
