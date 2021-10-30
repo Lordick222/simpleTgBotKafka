@@ -22,4 +22,14 @@ class RoomCreator(private val roomRepository: RoomRepository) {
         val editPosition = position.removePrefix("/create_user ")
         return roomRepository.registerUser(editPosition, chatId, name)
     }
+
+    fun enterRoom(command: String, userKey: Long): String {
+        val roomName = command.removePrefix("/enter_room ")
+        return roomRepository.addUsertoRoom(roomName, userKey)
+    }
+
+    fun getRoomsUsers(command: String, userKey: Long): String {
+        val roomName = command.removePrefix("/room_users ")
+        return roomRepository.getRoomsUsers(roomName, userKey)
+    }
 }

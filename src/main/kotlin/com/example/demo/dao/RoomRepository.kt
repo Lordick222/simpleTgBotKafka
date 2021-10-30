@@ -12,7 +12,7 @@ class RoomRepository(
 ) {
 
     fun createNewRoom(name: String, key: Long): String {
-        var room = Room(null, LocalDateTime.now(), name, key)
+        val room = Room(null, LocalDateTime.now(), name, key)
         rooms.getOrPut(name) { room }
         return rooms.get(name).toString()
     }
@@ -33,5 +33,24 @@ class RoomRepository(
         val user = User(name, position, key, null)
         users.getOrPut(key) { user }
         return users.get(key).toString()
+    }
+
+    fun addUsertoRoom(roomName: String, userKey: Long): String {
+        val user = users.get(userKey) ?: return "user is not register"
+        val room = rooms.get(roomName) ?: return "room is not register now"
+        room.users?.add(userKey)
+        return "sussesfully added to ${room.name}"
+    }
+
+    fun getRoomsUsers(roomName: String, userKey: Long): String {
+        val room = rooms.get(roomName) ?: return "room is not register now"
+        if (!room.lockKey.equals(userKey)) return "it's not your room"
+        val sb = StringBuilder()
+        sb.append(room.toString()).append(System.getProperty("line.separator"))
+            .append("----------users----------").append(System.getProperty("line.separator"))
+        room.users?.forEach {
+            sb.append(users[it].toString()).append(System.getProperty("line.separator"))
+        }
+        return sb.toString()
     }
 }
