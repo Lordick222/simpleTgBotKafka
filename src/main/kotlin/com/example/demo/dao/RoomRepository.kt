@@ -4,6 +4,7 @@ import com.example.demo.dto.Room
 import com.example.demo.dto.User
 import org.springframework.stereotype.Repository
 import java.time.LocalDateTime
+import java.util.*
 
 @Repository
 class RoomRepository(
@@ -17,22 +18,14 @@ class RoomRepository(
         return rooms.get(name).toString()
     }
 
-    fun getAllRooms(): String {
-        val builder = StringBuilder()
-        rooms.forEach { it ->
-            builder.append("------------------------")
-            builder.append(System.getProperty("line.separator"))
-            builder.append(it)
-            builder.append(System.getProperty("line.separator"))
-            builder.append("------------------------")
-        }
-        return builder.toString()
+    fun getAllRooms(): Map<String, Room> {
+        return Collections.unmodifiableMap(rooms)
     }
 
-    fun registerUser(position: String, key: Long, name: String): String {
+    fun registerUser(position: String, key: Long, name: String): User? {
         val user = User(name, position, key, null)
         users.getOrPut(key) { user }
-        return users.get(key).toString()
+        return users.get(key)
     }
 
     fun addUsertoRoom(roomName: String, userKey: Long): String {
@@ -103,9 +96,9 @@ class RoomRepository(
     fun dropResults(roomName: String, userKey: Long): String {
         val room = rooms.get(roomName) ?: return "room is not register now"
         if (!room.lockKey.equals(userKey)) return "it's not your room"
-       room.users?.forEach {
-           users[it]?.vote = null
-       }
+        room.users?.forEach {
+            users[it]?.vote = null
+        }
         return "votes dropped"
     }
 }

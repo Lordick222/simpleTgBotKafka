@@ -15,12 +15,21 @@ class RoomCreator(private val roomRepository: RoomRepository) {
     }
 
     fun getRooms(): String {
-        return roomRepository.getAllRooms()
+        val rooms = roomRepository.getAllRooms()
+        val builder = StringBuilder()
+        rooms.forEach {
+            builder.append("------------------------")
+            builder.append(System.getProperty("line.separator"))
+            builder.append(it)
+            builder.append(System.getProperty("line.separator"))
+            builder.append("------------------------")
+        }
+        return builder.toString()
     }
 
     fun registerUser(position: String, chatId: Long, name: String): String {
         val editPosition = position.removePrefix("/create_user ")
-        return roomRepository.registerUser(editPosition, chatId, name)
+        return roomRepository.registerUser(editPosition, chatId, name).toString()
     }
 
     fun enterRoom(command: String, userKey: Long): String {
