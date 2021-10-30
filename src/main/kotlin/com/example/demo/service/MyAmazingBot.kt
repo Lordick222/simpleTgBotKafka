@@ -35,6 +35,16 @@ class MyAmazingBot(private val roomCreator: RoomCreator) : TelegramLongPollingBo
         }
     }
 
+    fun sendMessage(message: String?) {
+        val message = message?.let { SendMessage.builder().text(it).build() }
+        try {
+            execute(message)
+        } catch (e: TelegramApiException) {
+            e.stackTrace
+            throw e
+        }
+    }
+
     fun getCommand(update: Update): String {
         val messageText = update.message.text
         val chatId = update.message.chatId
