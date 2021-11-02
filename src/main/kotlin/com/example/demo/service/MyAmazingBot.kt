@@ -1,5 +1,6 @@
 package com.example.demo.service
 
+import lombok.AllArgsConstructor
 import org.springframework.stereotype.Service
 import org.telegram.telegrambots.bots.TelegramLongPollingBot
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage
@@ -8,7 +9,9 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException
 
 
 @Service
-class MyAmazingBot : TelegramLongPollingBot() {
+@AllArgsConstructor
+class MyAmazingBot(private val roomCreator: RoomCreator) : TelegramLongPollingBot() {
+
     override fun getBotToken(): String {
         return "1969725133:AAGCOLwk-TCPhHYjC7-QH4l4wQC4Sp-Fozs"
     }
@@ -20,9 +23,9 @@ class MyAmazingBot : TelegramLongPollingBot() {
     override fun onUpdateReceived(update: Update?) {
         if (update == null) return;
         if (update.hasMessage() && update.getMessage().hasText()) {
-            val messageText = update.message.text
             val chatId = update.message.chatId
-            val message = SendMessage.builder().chatId(chatId.toString()).text(messageText).build()
+            val reply = getCommand(update)
+            val message = SendMessage.builder().chatId(chatId.toString()).text(reply).build()
             try {
                 execute(message)
             } catch (e: TelegramApiException) {
@@ -30,5 +33,51 @@ class MyAmazingBot : TelegramLongPollingBot() {
                 throw e
             }
         }
+    }
+
+    fun sendMessage(message: String?) {
+        val message = message?.let { SendMessage.builder().text(it).build() }
+        try {
+            execute(message)
+        } catch (e: TelegramApiException) {
+            e.stackTrace
+            throw e
+        }
+    }
+
+    fun getCommand(update: Update): String {
+        val messageText = update.message.text
+        val chatId = update.message.chatId
+        var reply = ""
+        when {
+            messageText.contains("/new_poker_room") -> {
+                reply = roomCreator.createNewRoom(messageText, chatId)
+            }
+            messageText.contains("/get_rooms") -> {
+                reply = roomCreator.getRooms()
+            }
+            messageText.contains("/create_user") -> {
+                reply = roomCreator.registerUser(messageText, chatId, update.message.from.userName)
+            }
+            messageText.contains("/enter_room") -> {
+                reply = roomCreator.enterRoom(messageText, chatId)
+            }
+            messageText.contains("/room_users") -> {
+                reply = roomCreator.getRoomsUsers(messageText, chatId)
+            }
+            messageText.contains("/vote") -> {
+                reply = roomCreator.setUserVote(messageText, chatId)
+            }
+            messageText.contains("/show_results") -> {
+                reply = roomCreator.showVoteResults(messageText, chatId)
+            }
+            messageText.contains("/drop_results") -> {
+                reply = roomCreator.dropResults(messageText, chatId)
+            }
+            messageText.contains("/is_vote") -> {
+                reply = roomCreator.isUsersVote(messageText, chatId)
+            }
+        }
+        return reply
     }
 }
